@@ -2,8 +2,7 @@ module Main exposing (main)
 
 import Browser exposing (Document)
 import Browser.Events
-import Browser.Navigation as Nav
-import Element exposing (Element, centerX, centerY, el, text)
+import Element exposing (Element, centerX, centerY, column, el, fill, height, maximum, padding, paragraph, spacing, text, width)
 import Element.Font as Font
 import Html exposing (Html)
 import InteropPorts
@@ -73,23 +72,47 @@ responsiveView model =
 
 
 phoneView : Model -> Element Msg
-phoneView model =
-    el
-        [ centerX
-        , centerY
+phoneView _ =
+    let
+        scaled =
+            Element.modular 16 1.25 >> round
+
+        p =
+            paragraph [ Font.size (scaled 2) ]
+    in
+    column
+        [ width fill, height fill, spacing (scaled 1), padding (scaled 1) ]
+        [ el [ Font.size (scaled 6) ] <| text "codefab.io"
+        , p firstParagraph
+        , p secondParagraph
         ]
-    <|
-        text "📱 This is the phone view"
 
 
 desktopView : Model -> Element Msg
 desktopView model =
-    el
-        [ centerX
-        , centerY
+    let
+        scaled =
+            Element.modular 16 1.25 >> round
+
+        p =
+            paragraph [ Font.size (scaled 3) ]
+    in
+    column
+        [ width (fill |> maximum 800), height fill, spacing (scaled 1), padding (scaled 1), centerX ]
+        [ el [ Font.size (scaled 6) ] <| text "codefab.io"
+        , p firstParagraph
+        , p secondParagraph
         ]
-    <|
-        text "💻 This is the desktop view"
+
+
+firstParagraph : List (Element msg)
+firstParagraph =
+    [ text "First line first line first line first line first line first line first line first line first line first line" ]
+
+
+secondParagraph : List (Element msg)
+secondParagraph =
+    [ text "Second line second line second line second line second line second line second line second line second line second line" ]
 
 
 
