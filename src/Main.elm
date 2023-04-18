@@ -1,8 +1,11 @@
 module Main exposing (main)
 
+import Assets
 import Browser exposing (Document)
 import Browser.Events
-import Element exposing (Element, centerX, centerY, column, el, fill, height, maximum, padding, paragraph, spacing, text, width)
+import Element exposing (Element, alignRight, alignTop, centerX, centerY, column, el, fill, fillPortion, height, inFront, maximum, minimum, none, padding, paragraph, px, rgb255, rgba255, row, scrollbarY, spacing, text, width)
+import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Html exposing (Html)
 import InteropPorts
@@ -49,7 +52,7 @@ view model =
     { title = "codefab.io"
     , body =
         [ Element.layout
-            [ Font.family [ Font.typeface "Ubuntu", Font.sansSerif ] ]
+            [ width fill, Font.family [ Font.typeface "Ubuntu", Font.sansSerif ] ]
             (responsiveView model)
         ]
     }
@@ -89,7 +92,7 @@ phoneView _ =
 
 
 desktopView : Model -> Element Msg
-desktopView model =
+desktopView _ =
     let
         scaled =
             Element.modular 16 1.25 >> round
@@ -98,21 +101,45 @@ desktopView model =
             paragraph [ Font.size (scaled 3) ]
     in
     column
-        [ width (fill |> maximum 800), height fill, spacing (scaled 1), padding (scaled 1), centerX ]
-        [ el [ Font.size (scaled 6) ] <| text "codefab.io"
-        , p firstParagraph
-        , p secondParagraph
+        [ width fill
+        , inFront <|
+            row
+                [ width fill, padding (scaled 1) ]
+                [ el [ alignRight, Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = rgb255 100 100 100 }, width (px 200), height (px 200), Background.image Assets.fabio640, Border.rounded 100 ] none ]
+        ]
+        [ column
+            [ padding (scaled 1)
+            , width fill
+            , Background.color <| rgb255 100 100 100
+            ]
+            [ el [ centerX, width <| (fillPortion 3 |> maximum 800), Font.size (scaled 6), Font.color <| rgb255 255 255 255 ] <|
+                text "codefab.io"
+            ]
+        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ rgb255 100 100 100, rgba255 255 255 255 0.1 ] } ] none
+        , row
+            [ centerX, width <| (fillPortion 3 |> maximum 800) ]
+            [ column
+                [ width <| (fillPortion 3 |> maximum 580), spacing (scaled 1) ]
+                [ column [ width fill, height fill ]
+                    [ p firstParagraph
+                    , p secondParagraph
+                    ]
+                ]
+            , column
+                [ width <| (fillPortion 1 |> minimum 220), alignTop ]
+                []
+            ]
         ]
 
 
 firstParagraph : List (Element msg)
 firstParagraph =
-    [ text "First line first line first line first line first line first line first line first line first line first line" ]
+    [ text <| String.repeat 50 "First line " ]
 
 
 secondParagraph : List (Element msg)
 secondParagraph =
-    [ text "Second line second line second line second line second line second line second line second line second line second line" ]
+    [ text <| String.repeat 500 "Second line " ]
 
 
 
