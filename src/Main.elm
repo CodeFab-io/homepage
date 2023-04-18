@@ -4,30 +4,40 @@ import Assets
 import Browser exposing (Document)
 import Browser.Events
 import Colors
-import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, inFront, maximum, minimum, newTabLink, none, padding, paddingXY, paragraph, px, row, spacing, text, width)
+import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, inFront, link, maximum, minimum, newTabLink, none, padding, paddingXY, paragraph, pointer, px, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
+import Element.Events as Events
+import Html.Attributes exposing (title)
 import InteropPorts
 import Json.Decode
+import Theme exposing (Theme(..))
 
 
 type alias Model =
     { width : Int
     , height : Int
+    , theme : Theme
     }
 
 
 type Msg
     = OnResize Int Int
+    | ToggleTheme
 
 
 init : Json.Decode.Value -> ( Model, Cmd Msg )
 init flags =
+    let
+        defaultTheme =
+            Light
+    in
     case InteropPorts.decodeFlags flags of
         Err _ ->
             ( { width = 1000
               , height = 1000
+              , theme = defaultTheme
               }
             , Cmd.none
             )
@@ -35,6 +45,7 @@ init flags =
         Ok decodedFlags ->
             ( { width = decodedFlags.width
               , height = decodedFlags.height
+              , theme = defaultTheme
               }
             , Cmd.none
             )
@@ -46,13 +57,27 @@ update msg model =
         OnResize width height ->
             ( { model | width = width, height = height }, Cmd.none )
 
+        ToggleTheme ->
+            ( case model.theme of
+                Light ->
+                    { model | theme = Dark }
+
+                Dark ->
+                    { model | theme = Light }
+            , Cmd.none
+            )
+
 
 view : Model -> Document Msg
 view model =
     { title = "codefab.io"
     , body =
         [ Element.layout
-            [ width fill, Font.family [ Font.typeface "Ubuntu", Font.sansSerif ] ]
+            [ width fill
+            , Font.family [ Font.typeface "Ubuntu", Font.sansSerif ]
+            , Background.color <| Colors.white model.theme
+            , Font.color <| Colors.dark model.theme
+            ]
             (responsiveView model)
         ]
     }
@@ -100,8 +125,6 @@ desktopView model =
         scaled =
             Element.modular modularNormal 1.25 >> round
 
-        
-
         mainContentMaxWidth =
             clamp 700 1000 model.width
 
@@ -117,17 +140,24 @@ desktopView model =
             el
                 [ width fill, padding (scaled 1) ]
             <|
-                desktopSidebarView { scaled = scaled, sidebarWidth = sidebarWidth }
+                desktopSidebarView { scaled = scaled, sidebarWidth = sidebarWidth } model
         ]
-        [ column
+        [ row
             [ padding (scaled 1)
             , width fill
-            , Background.color Colors.navbarBackground
+            , Background.color <| Colors.navbarBackground model.theme
             ]
-            [ el [ centerX, width <| (fillPortion 3 |> maximum mainContentMaxWidth), Font.size (scaled 6), Font.color Colors.white ] <|
+            [ el
+                [ centerX
+                , width <| (fillPortion 3 |> maximum mainContentMaxWidth)
+                , Font.size (scaled 4)
+                , Font.color <| Colors.navbarText model.theme
+                , Font.shadow { offset = ( 0, 3 ), blur = 10, color = Element.rgb255 0 0 0 }
+                ]
+              <|
                 text "codefab.io"
             ]
-        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ Colors.navbarBackground, Colors.navbarBackgroundShadow ] } ] none
+        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ Colors.navbarBackground model.theme, Colors.navbarBackgroundShadow model.theme ] } ] none
         , row
             [ centerX, width <| (fillPortion 3 |> maximum mainContentMaxWidth) ]
             [ column
@@ -144,11 +174,16 @@ desktopView model =
         ]
 
 
-desktopSidebarView : { scaled : Int -> Int, sidebarWidth : Int } -> Element msg
-desktopSidebarView { scaled, sidebarWidth } =
-    column [ alignRight, spacing (scaled 1), Font.size (scaled 1) ]
+desktopSidebarView : { scaled : Int -> Int, sidebarWidth : Int } -> Model -> Element Msg
+desktopSidebarView { scaled, sidebarWidth } model =
+    column
+        [ alignRight
+        , spacing (scaled 1)
+        , Font.size (scaled 1)
+        , inFront <| el [ pointer, alignRight, Events.onClick ToggleTheme, padding (scaled -2), Element.htmlAttribute <| title "Fábio has an idea:\ntoggle the theme color here" ] <| text "💡"
+        ]
         [ el
-            [ Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = Colors.navbarBackground }
+            [ Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = Colors.navbarBackground model.theme }
             , width (px sidebarWidth)
             , height (px sidebarWidth)
             , Background.image Assets.fabio640
@@ -158,6 +193,10 @@ desktopSidebarView { scaled, sidebarWidth } =
         , column [ centerX, spacing (scaled 1) ]
             [ newTabLink [] { url = "mailto:fabio@codefab.io", label = text "📧 fabio@codefab.io" }
             , newTabLink [] { url = "tel:+31640801406", label = text "☎️ +31 6 40801406" }
+            , newTabLink [] { url = "https://github.com/fdbeirao", label = row [] [ el [ width <| px 16, height <| px 16, Background.image <| Assets.githubLogo model.theme ] none, text " github.com/fdbeirao" ] }
+            , link [] { url = "https://codefab.io", label = text "🌐 https://codefab.io" }
+            , newTabLink [ Element.htmlAttribute <| title "keybase.io is a cryptography-first social network" ]
+                { url = "https://www.keybase.io/fdbeirao", label = text "🔐 keybase.io/fdbeirao" }
             ]
         ]
 
@@ -185,6 +224,7 @@ subscriptions _ =
 -- MAIN
 
 
+main : Program Json.Decode.Value Model Msg
 main =
     Browser.document
         { init = init

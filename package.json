@@ -1,6 +1,6 @@
 {
     "main": "index.ts",
-    "description": "Homepage for CodeFab.io",
+    "description": "Homepage for codefab.io",
     "homepage": "https://codefab.io",
     "author": "Fábio Beirão <fabio@codefab.io> (https://codefab.io/)",
     "scripts": {
