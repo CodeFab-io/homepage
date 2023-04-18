@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Ubuntu",
+	"dockerFile": "Dockerfile",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	"appPort": [ "1235:1235" ],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "",
+	// A command to run after starting the container. This command is run after "postCreateCommand"
+	// and before "postAttachCommand". If this is a single string, it will be run in a shell.
+	// If this is an array of strings, it will be run as a single command without shell.
+	// Alternatively an object with the property keys as labels and the values as either strings or
+	// arrays of strings can be used to configure multiple commands.
+	"postStartCommand": "yarn install",
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"AmazonWebServices.aws-toolkit-vscode",
+				"Elmtooling.elm-ls-vscode",
+				"HashiCorp.terraform"
+			]
+		}
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "node",
+	"mounts": [
+		"source=vscode-devcontainer-elm-dependency-cache,target=/home/node/.elm,type=volume",
+		"source=${env:HOME}${env:USERPROFILE}/.aws,target=/home/vscode/.aws,type=bind"
+	]
+}
