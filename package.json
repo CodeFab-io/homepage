@@ -1,0 +1,21 @@
+{
+    "main": "index.ts",
+    "description": "Homepage for CodeFab.io",
+    "homepage": "https://codefab.io",
+    "author": "Fábio Beirão <fabio@codefab.io> (https://codefab.io/)",
+    "scripts": {
+        "start": "vite --host --port 1235",
+        "build": "tsc --noEmit && vite build",
+        "lint": "eslint index.ts"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.49.0",
+        "@typescript-eslint/parser": "^5.49.0",
+        "elm-tooling": "^1.12.0",
+        "eslint": "^8.32.0",
+        "prettier": "^2.8.3",
+        "typescript": "^4.9.4",
+        "vite": "^3.2.5",
+        "vite-plugin-elm": "^2.7.2"
+    }
+}
