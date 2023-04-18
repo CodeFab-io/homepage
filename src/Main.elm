@@ -51,19 +51,45 @@ view model =
     , body =
         [ Element.layout
             [ Font.family [ Font.typeface "Ubuntu", Font.sansSerif ] ]
-            (mainView model)
+            (responsiveView model)
         ]
     }
 
 
-mainView : Model -> Element Msg
-mainView _ =
+responsiveView : Model -> Element Msg
+responsiveView model =
+    case (model |> Element.classifyDevice).class of
+        Element.Phone ->
+            model |> phoneView
+
+        Element.Tablet ->
+            model |> desktopView
+
+        Element.Desktop ->
+            model |> desktopView
+
+        Element.BigDesktop ->
+            model |> desktopView
+
+
+phoneView : Model -> Element Msg
+phoneView model =
     el
         [ centerX
         , centerY
         ]
     <|
-        text "Hello from Elm 👋🏻"
+        text "📱 This is the phone view"
+
+
+desktopView : Model -> Element Msg
+desktopView model =
+    el
+        [ centerX
+        , centerY
+        ]
+    <|
+        text "💻 This is the desktop view"
 
 
 
