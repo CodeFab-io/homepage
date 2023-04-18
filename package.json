@@ -5,13 +5,17 @@
     "author": "Fábio Beirão <fabio@codefab.io> (https://codefab.io/)",
     "scripts": {
         "start": "vite --host --port 1235",
-        "build": "tsc --noEmit && vite build",
-        "lint": "eslint index.ts"
+        "build": "yarn run generate && tsc --noEmit && vite build",
+        "generate" : "yarn run generate-typescript && yarn run lint && yarn run pretty",
+        "generate-typescript": "elm-ts-interop --definition-module InteropDefinitions --output src/Main.elm.d.ts",
+        "lint": "eslint index.ts",
+        "pretty": "prettier --write src/Main.elm.d.ts"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.49.0",
         "@typescript-eslint/parser": "^5.49.0",
         "elm-tooling": "^1.12.0",
+        "elm-ts-interop": "^0.0.8",
         "eslint": "^8.32.0",
         "prettier": "^2.8.3",
         "typescript": "^4.9.4",
