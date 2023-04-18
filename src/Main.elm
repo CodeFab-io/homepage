@@ -3,11 +3,11 @@ module Main exposing (main)
 import Assets
 import Browser exposing (Document)
 import Browser.Events
-import Element exposing (Element, alignRight, alignTop, centerX, centerY, column, el, fill, fillPortion, height, inFront, maximum, minimum, none, padding, paragraph, px, rgb255, rgba255, row, scrollbarY, spacing, text, width)
+import Colors
+import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, inFront, maximum, minimum, newTabLink, none, padding, paddingXY, paragraph, px, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
-import Html exposing (Html)
 import InteropPorts
 import Json.Decode
 
@@ -92,10 +92,21 @@ phoneView _ =
 
 
 desktopView : Model -> Element Msg
-desktopView _ =
+desktopView model =
     let
+        modularNormal =
+            16
+
         scaled =
-            Element.modular 16 1.25 >> round
+            Element.modular modularNormal 1.25 >> round
+
+        
+
+        mainContentMaxWidth =
+            clamp 700 1000 model.width
+
+        sidebarWidth =
+            mainContentMaxWidth // 4
 
         p =
             paragraph [ Font.size (scaled 3) ]
@@ -103,43 +114,62 @@ desktopView _ =
     column
         [ width fill
         , inFront <|
-            row
+            el
                 [ width fill, padding (scaled 1) ]
-                [ el [ alignRight, Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = rgb255 100 100 100 }, width (px 200), height (px 200), Background.image Assets.fabio640, Border.rounded 100 ] none ]
+            <|
+                desktopSidebarView { scaled = scaled, sidebarWidth = sidebarWidth }
         ]
         [ column
             [ padding (scaled 1)
             , width fill
-            , Background.color <| rgb255 100 100 100
+            , Background.color Colors.navbarBackground
             ]
-            [ el [ centerX, width <| (fillPortion 3 |> maximum 800), Font.size (scaled 6), Font.color <| rgb255 255 255 255 ] <|
+            [ el [ centerX, width <| (fillPortion 3 |> maximum mainContentMaxWidth), Font.size (scaled 6), Font.color Colors.white ] <|
                 text "codefab.io"
             ]
-        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ rgb255 100 100 100, rgba255 255 255 255 0.1 ] } ] none
+        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ Colors.navbarBackground, Colors.navbarBackgroundShadow ] } ] none
         , row
-            [ centerX, width <| (fillPortion 3 |> maximum 800) ]
+            [ centerX, width <| (fillPortion 3 |> maximum mainContentMaxWidth) ]
             [ column
-                [ width <| (fillPortion 3 |> maximum 580), spacing (scaled 1) ]
-                [ column [ width fill, height fill ]
+                [ width <| (fillPortion 3 |> maximum (mainContentMaxWidth - sidebarWidth - modularNormal)), spacing (scaled 1) ]
+                [ column [ width fill, height fill, spacing (scaled 1), paddingXY modularNormal modularNormal ]
                     [ p firstParagraph
                     , p secondParagraph
                     ]
                 ]
             , column
-                [ width <| (fillPortion 1 |> minimum 220), alignTop ]
+                [ width <| (fillPortion 1 |> minimum (sidebarWidth + modularNormal)), alignTop ]
                 []
+            ]
+        ]
+
+
+desktopSidebarView : { scaled : Int -> Int, sidebarWidth : Int } -> Element msg
+desktopSidebarView { scaled, sidebarWidth } =
+    column [ alignRight, spacing (scaled 1), Font.size (scaled 1) ]
+        [ el
+            [ Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = Colors.navbarBackground }
+            , width (px sidebarWidth)
+            , height (px sidebarWidth)
+            , Background.image Assets.fabio640
+            , Border.rounded (sidebarWidth // 2)
+            ]
+            none
+        , column [ centerX, spacing (scaled 1) ]
+            [ newTabLink [] { url = "mailto:fabio@codefab.io", label = text "📧 fabio@codefab.io" }
+            , newTabLink [] { url = "tel:+31640801406", label = text "☎️ +31 6 40801406" }
             ]
         ]
 
 
 firstParagraph : List (Element msg)
 firstParagraph =
-    [ text <| String.repeat 50 "First line " ]
+    [ text <| String.repeat 50 "first line " ]
 
 
 secondParagraph : List (Element msg)
 secondParagraph =
-    [ text <| String.repeat 500 "Second line " ]
+    [ text <| String.repeat 500 "second line " ]
 
 
 
