@@ -180,7 +180,7 @@ desktopSidebarView { scaled, sidebarWidth } model =
         [ alignRight
         , spacing (scaled 1)
         , Font.size (scaled 1)
-        , inFront <| el [ pointer, alignRight, Events.onClick ToggleTheme, padding (scaled -2), Element.htmlAttribute <| title "Fábio has an idea:\ntoggle the theme color here" ] <| text "💡"
+        , inFront <| el [ pointer, alignRight, Events.onClick ToggleTheme, padding (scaled -2), Element.htmlAttribute <| title "I have an idea:\ntoggle the theme color here" ] <| text "💡"
         ]
         [ el
             [ Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = Colors.navbarBackground model.theme }
@@ -191,7 +191,8 @@ desktopSidebarView { scaled, sidebarWidth } model =
             ]
             none
         , column [ centerX, spacing (scaled 1) ]
-            [ newTabLink [] { url = "mailto:fabio@codefab.io", label = text "📧 fabio@codefab.io" }
+            [ el [ width fill, Font.center, Font.bold, Font.size (scaled 3) ] <| text "Fábio Beirão"
+            , newTabLink [] { url = "mailto:fabio@codefab.io", label = text "📧 fabio@codefab.io" }
             , newTabLink [] { url = "tel:+31640801406", label = text "☎️ +31 6 40801406" }
             , newTabLink [] { url = "https://github.com/fdbeirao", label = row [] [ el [ width <| px 16, height <| px 16, Background.image <| Assets.githubLogo model.theme ] none, text " github.com/fdbeirao" ] }
             , link [] { url = "https://codefab.io", label = text "🌐 https://codefab.io" }
