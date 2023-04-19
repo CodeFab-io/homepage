@@ -288,11 +288,16 @@ paragraphs t =
         , t.semiBold "Erlang"
         , t.normal ", "
         , t.semiBold "Elixir"
-        , t.normal " and "
+        , t.normal ", "
         , t.semiBold "Elm"
+        , t.normal " and "
+        , t.semiBold "Haskell"
         , t.normal ". These technologies have helped me understand and fully embrace "
         , t.semiBold "functional programming"
-        , t.normal " as a tool to maximize code reliability. Don't get me wrong, it is not a silver bullet, but the trade-offs it brings are more than worth it (in my experience)."
+        , t.normal " as a tool to maximize code reliability. Don't get me wrong, it is not a silver bullet, but the trade-offs it brings are more than worth it (in my experience). "
+        , t.normal "I wrote a " 
+        , newTabLink [ pointer, Font.underline ] { url = "https://www.linkedin.com/pulse/one-problem-functional-programming-solved-me-reasoning-f%C3%A1bio-beir%C3%A3o", label = t.normal "small post" }
+        , t.normal " about it back then."
         ]
     , p
         [ t.normal "📝 Write about AWS, Terraform, Orleans (actor model), Event Sourcing, DDD, Type-Driven development"
