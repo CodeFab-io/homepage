@@ -12,10 +12,35 @@ fabio640 =
     asset "/assets/img/fabio640.webp"
 
 
-githubLogo theme =
-    case theme of
-        Light ->
-            asset "/assets/img/github-mark.png"
+linkedinLogo =
+    asset "/assets/img/LinkedInLogo.webp"
 
-        Dark ->
-            asset "/assets/img/github-mark-white.png"
+
+keybaseLogo =
+    asset "/assets/img/KeyBaseLogo.webp"
+
+
+gitlabLogo =
+    asset "/assets/img/GitLabLogo.webp"
+
+
+emailIcon =
+    Theme.apply
+        { light = asset "/assets/img/EmailLight.webp"
+        , dark = asset "/assets/img/EmailDark.webp"
+        }
+
+
+whatsappLogo =
+    asset "/assets/img/WhatsappGreenLogo.webp"
+
+telegramLogo =
+    asset "/assets/img/TelegramLogo.webp"
+
+
+
+githubLogo =
+    Theme.apply
+        { light = asset "/assets/img/github-mark.png"
+        , dark = asset "/assets/img/github-mark-white.png"
+        }

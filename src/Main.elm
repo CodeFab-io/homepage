@@ -7,8 +7,8 @@ import Colors
 import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, inFront, link, maximum, minimum, newTabLink, none, padding, paddingXY, paragraph, pointer, px, row, spacing, text, width)
 import Element.Background as Background
 import Element.Border as Border
-import Element.Font as Font
 import Element.Events as Events
+import Element.Font as Font
 import Html.Attributes exposing (title)
 import InteropPorts
 import Json.Decode
@@ -176,6 +176,16 @@ desktopView model =
 
 desktopSidebarView : { scaled : Int -> Int, sidebarWidth : Int } -> Model -> Element Msg
 desktopSidebarView { scaled, sidebarWidth } model =
+    let
+        withTitle =
+            Element.htmlAttribute << title
+
+        iconElement icon =
+            el [ width <| px 24, height <| px 24, Background.image icon ] none
+
+        iconWithLink { title, icon, url } =
+            newTabLink [ withTitle title ] { url = url, label = iconElement icon }
+    in
     column
         [ alignRight
         , spacing (scaled 1)
@@ -191,13 +201,22 @@ desktopSidebarView { scaled, sidebarWidth } model =
             ]
             none
         , column [ centerX, spacing (scaled 1) ]
-            [ el [ width fill, Font.center, Font.bold, Font.size (scaled 3) ] <| text "Fábio Beirão"
-            , newTabLink [] { url = "mailto:fabio@codefab.io", label = text "📧 fabio@codefab.io" }
-            , newTabLink [] { url = "tel:+31640801406", label = text "☎️ +31 6 40801406" }
-            , newTabLink [] { url = "https://github.com/fdbeirao", label = row [] [ el [ width <| px 16, height <| px 16, Background.image <| Assets.githubLogo model.theme ] none, text " github.com/fdbeirao" ] }
-            , link [] { url = "https://codefab.io", label = text "🌐 https://codefab.io" }
-            , newTabLink [ Element.htmlAttribute <| title "keybase.io is a cryptography-first social network" ]
-                { url = "https://www.keybase.io/fdbeirao", label = text "🔐 keybase.io/fdbeirao" }
+            [ el [ centerX, Font.bold, Font.size (scaled 3) ] <| text "Fábio Beirão"
+            , column [ centerX, spacing (scaled 1) ]
+                [ row [ centerX, spacing (scaled -2) ]
+                    [ iconWithLink { title = "linkedin.com", icon = Assets.linkedinLogo, url = "https://www.linkedin.com/in/fdbeirao/" }
+                    , iconWithLink { title = "github.com", icon = Assets.githubLogo model.theme, url = "https://github.com/fdbeirao" }
+                    , iconWithLink { title = "gitlab.com", icon = Assets.gitlabLogo, url = "https://gitlab.com/fdbeirao" }
+                    , iconWithLink { title = "keybase.io", icon = Assets.keybaseLogo, url = "https://www.keybase.io/fdbeirao" }
+                    ]
+                , row [ centerX, spacing (scaled -2) ]
+                    [ iconWithLink { title = "WhatsApp", icon = Assets.whatsappLogo, url = "https://wa.me/31640801406" }
+                    , iconWithLink { title = "Telegram", icon = Assets.telegramLogo, url = "https://t.me/+31640801406" }
+                    ]
+                ]
+            , newTabLink [ centerX ] { url = "mailto:fabio@codefab.io", label = text "fabio@codefab.io" }
+            , newTabLink [ centerX ] { url = "tel:+31640801406", label = text "+31 6 40801406" }
+            , el [ centerX ] <| text "📌 Netherlands"
             ]
         ]
 
