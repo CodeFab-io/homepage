@@ -4,7 +4,7 @@ import Assets
 import Browser exposing (Document)
 import Browser.Events
 import Colors
-import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, inFront, link, maximum, minimum, newTabLink, none, padding, paddingEach, paddingXY, paragraph, pointer, px, row, spacing, text, width)
+import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, htmlAttribute, inFront, maximum, minimum, newTabLink, none, padding, paddingEach, paddingXY, paragraph, pointer, px, row, shrink, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events as Events
@@ -108,7 +108,7 @@ responsiveView model =
 
 
 phoneView : Model -> Element Msg
-phoneView _ =
+phoneView model =
     let
         scaled =
             Element.modular 16 1.25 >> round
@@ -121,9 +121,55 @@ phoneView _ =
             }
     in
     column
-        [ width fill, height fill, spacing (scaled 1), padding (scaled 1) ]
-        [ el [ Font.size (scaled 6) ] <| text "codefab.io"
-        , column [ spacing (scaled 1) ] <| paragraphs textUtils
+        [ width fill
+        , height fill
+        , inFront <|
+            el [ width fill, padding (scaled 1) ] <|
+                el
+                    [ alignRight
+                    , Border.shadow { offset = ( 0, 0 ), size = 5, blur = 10, color = Colors.navbarBackground model.theme }
+                    , width (px 128)
+                    , height (px 128)
+                    , Background.image Assets.fabio320
+                    , Border.rounded 64
+                    , inFront <| el [ pointer, alignRight, Events.onClick ToggleTheme, padding (scaled -2), Element.htmlAttribute <| title "I have an idea:\ntoggle the theme color here" ] <| text "💡"
+                    ]
+                    none
+        ]
+        [ row
+            [ padding (scaled 1)
+            , width fill
+            , Background.color <| Colors.navbarBackground model.theme
+            ]
+            [ el
+                [ centerX
+                , width fill
+                , Font.size (scaled 4)
+                , Font.color <| Colors.navbarText model.theme
+                , Font.shadow { offset = ( 0, 3 ), blur = 10, color = Element.rgb255 0 0 0 }
+                ]
+              <|
+                text "codefab.io"
+            ]
+        , el [ width fill, height <| px 10, Background.gradient { angle = pi, steps = [ Colors.navbarBackground model.theme, Colors.navbarBackgroundShadow model.theme ] } ] none
+        , column [ width <| (fill |> maximum (model.width - 150)) ]
+            [ paragraph [ padding (scaled 1) ]
+                [ el [ Font.size (scaled 1), Font.bold ] <| text "Fábio Beirão"
+                , el [ Font.size (scaled -1) ] <| text " - Freelancer, full-stack software architect and developer. "
+                , newTabLink [ Font.size (scaled -1), Font.underline ] { url = "mailto:fabio@codefab.io", label = text "fabio@codefab.io" }
+                , text " " 
+                , newTabLink [ Font.size (scaled -1), Font.underline ] { url = "tel:+31640801406", label = text "+31 6 40801406" }
+                ]
+            , row [ padding (scaled 1), spacing (scaled 2) ]
+                [ iconWithLink { titleText = "linkedin.com", icon = Assets.linkedinLogo, url = "https://www.linkedin.com/in/fdbeirao/" }
+                , iconWithLink { titleText = "github.com", icon = Assets.githubLogo model.theme, url = "https://github.com/fdbeirao" }
+                , iconWithLink { titleText = "gitlab.com", icon = Assets.gitlabLogo, url = "https://gitlab.com/fdbeirao" }
+                , iconWithLink { titleText = "keybase.io", icon = Assets.keybaseLogo, url = "https://www.keybase.io/fdbeirao" }
+                , iconWithLink { titleText = "WhatsApp", icon = Assets.whatsappLogo, url = "https://wa.me/31640801406" }
+                , iconWithLink { titleText = "Telegram", icon = Assets.telegramLogo, url = "https://t.me/+31640801406" }
+                ]
+            ]
+        , column [ padding (scaled 1), spacing (scaled 1) ] <| paragraphs textUtils
         ]
 
 
@@ -141,9 +187,6 @@ desktopView model =
 
         sidebarWidth =
             mainContentMaxWidth // 4
-
-        p =
-            paragraph [ Font.size (scaled 3) ]
 
         textUtils =
             { scaled = scaled
@@ -181,7 +224,7 @@ desktopView model =
             [ centerX, width <| (fillPortion 3 |> maximum mainContentMaxWidth) ]
             [ column
                 [ width <| (fillPortion 3 |> maximum (mainContentMaxWidth - sidebarWidth - modularNormal)), spacing (scaled 1) ]
-                [ column [ width fill, height fill, spacing (scaled 1), paddingXY modularNormal modularNormal ] <|
+                [ column [ width fill, height fill, spacing (scaled 1), padding modularNormal ] <|
                     paragraphs textUtils
                 ]
             , column
@@ -193,16 +236,6 @@ desktopView model =
 
 desktopSidebarView : { scaled : Int -> Int, sidebarWidth : Int } -> Model -> Element Msg
 desktopSidebarView { scaled, sidebarWidth } model =
-    let
-        withTitle =
-            Element.htmlAttribute << title
-
-        iconElement icon =
-            el [ width <| px 24, height <| px 24, Background.image icon ] none
-
-        iconWithLink { title, icon, url } =
-            newTabLink [ withTitle title ] { url = url, label = iconElement icon }
-    in
     column
         [ alignRight
         , spacing (scaled 1)
@@ -225,14 +258,14 @@ desktopSidebarView { scaled, sidebarWidth } model =
                 ]
             , column [ centerX, spacing (scaled 1) ]
                 [ row [ centerX, spacing (scaled -2) ]
-                    [ iconWithLink { title = "linkedin.com", icon = Assets.linkedinLogo, url = "https://www.linkedin.com/in/fdbeirao/" }
-                    , iconWithLink { title = "github.com", icon = Assets.githubLogo model.theme, url = "https://github.com/fdbeirao" }
-                    , iconWithLink { title = "gitlab.com", icon = Assets.gitlabLogo, url = "https://gitlab.com/fdbeirao" }
-                    , iconWithLink { title = "keybase.io", icon = Assets.keybaseLogo, url = "https://www.keybase.io/fdbeirao" }
+                    [ iconWithLink { titleText = "linkedin.com", icon = Assets.linkedinLogo, url = "https://www.linkedin.com/in/fdbeirao/" }
+                    , iconWithLink { titleText = "github.com", icon = Assets.githubLogo model.theme, url = "https://github.com/fdbeirao" }
+                    , iconWithLink { titleText = "gitlab.com", icon = Assets.gitlabLogo, url = "https://gitlab.com/fdbeirao" }
+                    , iconWithLink { titleText = "keybase.io", icon = Assets.keybaseLogo, url = "https://www.keybase.io/fdbeirao" }
                     ]
                 , row [ centerX, spacing (scaled -2) ]
-                    [ iconWithLink { title = "WhatsApp", icon = Assets.whatsappLogo, url = "https://wa.me/31640801406" }
-                    , iconWithLink { title = "Telegram", icon = Assets.telegramLogo, url = "https://t.me/+31640801406" }
+                    [ iconWithLink { titleText = "WhatsApp", icon = Assets.whatsappLogo, url = "https://wa.me/31640801406" }
+                    , iconWithLink { titleText = "Telegram", icon = Assets.telegramLogo, url = "https://t.me/+31640801406" }
                     ]
                 ]
             , newTabLink [ centerX ] { url = "mailto:fabio@codefab.io", label = text "fabio@codefab.io" }
@@ -240,6 +273,15 @@ desktopSidebarView { scaled, sidebarWidth } model =
             , el [ centerX ] <| text "📌 Netherlands"
             ]
         ]
+
+
+iconWithLink : { titleText : String, icon : String, url : String } -> Element Msg
+iconWithLink { titleText, icon, url } =
+    let
+        iconElement img =
+            el [ width <| px 24, height <| px 24, Background.image img ] none
+    in
+    newTabLink [ titleText |> title |> htmlAttribute ] { url = url, label = iconElement icon }
 
 
 paragraphs : TextUtils msg -> List (Element msg)
@@ -295,7 +337,7 @@ paragraphs t =
         , t.normal ". These technologies have helped me understand and fully embrace "
         , t.semiBold "functional programming"
         , t.normal " as a tool to maximize code reliability. Don't get me wrong, it is not a silver bullet, but the trade-offs it brings are more than worth it (in my experience). "
-        , t.normal "I wrote a " 
+        , t.normal "I wrote a "
         , newTabLink [ pointer, Font.underline ] { url = "https://www.linkedin.com/pulse/one-problem-functional-programming-solved-me-reasoning-f%C3%A1bio-beir%C3%A3o", label = t.normal "small post" }
         , t.normal " about it back then."
         ]
