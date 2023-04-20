@@ -306,7 +306,7 @@ paragraphs t =
         , t.normal " since May 2022. I am originally from"
         , t.semiBold " Portugal "
         , t.normal "and I moved to the Netherlands in December 2015. Have I been able to learn Dutch meanwhile? All I can say is: "
-        , t.italic <| quote "Het spijt me, ik praat geen Nederlands. Het is niet makkelijk. Tot ziens, dank je wel."
+        , t.italic <| quote "Het spijt me, ik praat geen Nederlands. Het is niet makkelijk. Kunnen we Engels praten, alstublieft? Dank je wel!"
         , t.normal " (so: no, not that much)."
         ]
     , p
@@ -327,8 +327,9 @@ paragraphs t =
         , t.normal "should never be underestimated. After one too many "
         , t.italic <| quote "undefined is not a function"
         , t.normal " or the dreaded "
-        , t.italic <| quote "Unhandled Exception: System.NullReferenceException"
-        , t.normal " (many of them caused by me, oops) I have started gravitating towards different languages and paradigms. Despite most of my previous carrer having been"
+        , t.italic <| quote "Unhandled Exception: System .NullReferenceException"
+        , t.small " (many of them caused by me, oops) "
+        , t.normal "I have started gravitating towards different languages and paradigms. Despite most of my previous carrer having been"
         , t.italic <| quote "object oriented"
         , t.normal " and imperative, in 2017 I had a ground-breaking pivotal moment when I decided to learn "
         , t.semiBold "Erlang"
@@ -342,21 +343,29 @@ paragraphs t =
         , t.semiBold "functional programming"
         , t.normal " as a tool to maximize code reliability. Don't get me wrong, it is not a silver bullet, but the trade-offs it brings are more than worth it (in my experience). "
         , t.normal "I wrote a "
-        , newTabLink [ pointer, Font.underline ] { url = "https://www.linkedin.com/pulse/one-problem-functional-programming-solved-me-reasoning-f%C3%A1bio-beir%C3%A3o", label = t.normal "small post" }
+        , newTabLink [ Font.underline ] { url = "https://www.linkedin.com/pulse/one-problem-functional-programming-solved-me-reasoning-f%C3%A1bio-beir%C3%A3o", label = t.normal "small post" }
         , t.normal " about it back then."
         ]
     , p
-        [ t.normal "Some of the more specific technologies that I am familiar with, most of which I used in production: elm, dotnet/C#, javascript, typescript, docker, devcontainers, AWS, azure, terraform, microsoft orleans, "
-        , t.normal "actor model, git, github, gitlab, bitbucket, team foundation services, windows, linux, erlang, elixir, sql server, postgresql, event sourcing, domain driven design, type driven development, eventual consistency, "
-        , t.normal "among many others which it has been too long and others which I haven't used yet."
+        [ t.normal "Some of the more specific technologies that I am most familiar with, most of which I used in production: elm, elm-ui, dotnet/C#, wpf, winforms, html, css, javascript, typescript, graphql, rest, docker, devcontainers, AWS, azure, terraform, microsoft orleans, "
+        , t.normal "actor model, git, github, gitlab, bitbucket, team foundation services, windows, linux, erlang, elixir, sql server, postgresql, event sourcing, domain driven design, type driven development, eventual consistency, steam, "
+        , t.normal "among many others which it has been too long and others which I haven't used yet "
+        , t.small "(looking forward for the upcoming "
+        , newTabLink [ Font.underline ] { url = "https://www.roc-lang.org/", label = t.small "roc-lang" }
+        , t.normal ")."
+        ]
+    , p
+        [ t.normal "Regardless of the technology choice, the one thing that all projects I have participated have in common is that I find myself surrounded by "
+        , t.semiBold "awesome people"
+        , t.normal ". Technologies come and go: there will never be a best one. People, on the other hand, are the thing that is most worth investing in."
         ]
     , el [ width fill, Border.widthEach { top = 1, right = 0, bottom = 0, left = 0 } ] none
     , p
-        [ t.small "This webpage was made with💖using "
+        [ t.small "this webpage was made with💖using "
         , newTabLink [ "Elm: A delightful language for reliable web applications." |> title |> htmlAttribute ]
             { url = "https://elm-lang.org/", label = ElmLogo.element 14 }
-        , t.small " | No designers were harmed in the making of this page "
-        , t.small " | This website doesn't use cookies, whether you like it or not"
+        , t.small " | no designers were harmed in the making of this page "
+        , t.small " | this website doesn't use cookies, whether you like it or not 😁"
         ]
     ]
 
