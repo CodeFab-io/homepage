@@ -4,11 +4,12 @@ import Assets
 import Browser exposing (Document)
 import Browser.Events
 import Colors
-import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, htmlAttribute, inFront, maximum, minimum, newTabLink, none, padding, paddingEach, paddingXY, paragraph, pointer, px, row, shrink, spacing, text, width, wrappedRow)
+import Element exposing (Element, alignRight, alignTop, centerX, column, el, fill, fillPortion, height, htmlAttribute, inFront, maximum, minimum, moveDown, newTabLink, none, padding, paddingEach, paddingXY, paragraph, pointer, px, row, shrink, spacing, text, width, wrappedRow)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Events as Events
 import Element.Font as Font
+import ElmLogo
 import Html.Attributes exposing (title)
 import InteropPorts
 import Json.Decode
@@ -30,6 +31,7 @@ type Msg
 type alias TextUtils msg =
     { scaled : Int -> Int
     , normal : String -> Element msg
+    , small : String -> Element msg
     , semiBold : String -> Element msg
     , italic : String -> Element msg
     }
@@ -118,6 +120,7 @@ phoneView model =
             , semiBold = el [ Font.size (scaled 1), Font.semiBold ] << text
             , italic = el [ Font.size (scaled 1), Font.italic ] << text
             , normal = el [ Font.size (scaled 1) ] << text
+            , small = el [ Font.size (scaled -1) ] << text
             }
     in
     column
@@ -157,7 +160,7 @@ phoneView model =
                 [ el [ Font.size (scaled 1), Font.bold ] <| text "Fábio Beirão"
                 , el [ Font.size (scaled -1) ] <| text " - Freelancer, full-stack software architect and developer. "
                 , newTabLink [ Font.size (scaled -1), Font.underline ] { url = "mailto:fabio@codefab.io", label = text "fabio@codefab.io" }
-                , text " " 
+                , text " "
                 , newTabLink [ Font.size (scaled -1), Font.underline ] { url = "tel:+31640801406", label = text "+31 6 40801406" }
                 ]
             , row [ padding (scaled 1), spacing (scaled 2) ]
@@ -193,6 +196,7 @@ desktopView model =
             , semiBold = el [ Font.size (scaled 2), Font.semiBold ] << text
             , italic = el [ Font.size (scaled 2), Font.italic ] << text
             , normal = el [ Font.size (scaled 2) ] << text
+            , small = el [ Font.size (scaled 1) ] << text
             }
     in
     column
@@ -342,7 +346,17 @@ paragraphs t =
         , t.normal " about it back then."
         ]
     , p
-        [ t.normal "📝 Write about AWS, Terraform, Orleans (actor model), Event Sourcing, DDD, Type-Driven development"
+        [ t.normal "Some of the more specific technologies that I am familiar with, most of which I used in production: elm, dotnet/C#, javascript, typescript, docker, devcontainers, AWS, azure, terraform, microsoft orleans, "
+        , t.normal "actor model, git, github, gitlab, bitbucket, team foundation services, windows, linux, erlang, elixir, sql server, postgresql, event sourcing, domain driven design, type driven development, eventual consistency, "
+        , t.normal "among many others which it has been too long and others which I haven't used yet."
+        ]
+    , el [ width fill, Border.widthEach { top = 1, right = 0, bottom = 0, left = 0 } ] none
+    , p
+        [ t.small "This webpage was made with💖using "
+        , newTabLink [ "Elm: A delightful language for reliable web applications." |> title |> htmlAttribute ]
+            { url = "https://elm-lang.org/", label = ElmLogo.element 14 }
+        , t.small " | No designers were harmed in the making of this page "
+        , t.small " | This website doesn't use cookies, whether you like it or not"
         ]
     ]
 
