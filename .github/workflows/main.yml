@@ -29,7 +29,7 @@ jobs:
 
       - name: 🔐 Login to Github Container Registry
         uses: docker/login-action@v2
-        #if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
+        if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
         with:
           registry: ghcr.io
           username: ${{ github.REPOSITORY_OWNER }}
@@ -37,11 +37,11 @@ jobs:
 
       - name: 🐋 Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        #if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
+        if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
 
       - name: 👷🏻 Build and push dev Dockerfile
         uses: docker/build-push-action@v4
-        #if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
+        if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
         with:
           context: "{{defaultContext}}:.devcontainer"
           tags: ghcr.io/codefab-io/homepage-${{ github.REF_NAME }}-devcontainer
