@@ -44,7 +44,7 @@ jobs:
         #if: steps.checkDevContainerChanges.outputs.devcontainer == 'true'
         with:
           context: "{{defaultContext}}:.devcontainer"
-          tags: ghcr.io/codefabio/homepage-${{ github.REF_NAME }}-devcontainer
+          tags: ghcr.io/CodeFab-io/homepage-${{ github.REF_NAME }}-devcontainer
           push: true
 
 
@@ -53,7 +53,7 @@ jobs:
     name: 🛠️ Build ${{ github.REF_NAME }} branch
     timeout-minutes: 4
     runs-on: ubuntu-latest
-    container: ghcr.io/codefabio/homepage-${{ github.REF_NAME }}-devcontainer
+    container: ghcr.io/CodeFab-io/homepage-${{ github.REF_NAME }}-devcontainer
     
     steps:
       - name: 🛒 Checkout (GitHub)
@@ -78,7 +78,7 @@ jobs:
     name: 🚀 Deploy to https://codefab.io
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    container: ghcr.io/codefabio/homepage-${{ github.REF_NAME }}-devcontainer
+    container: ghcr.io/CodeFab-io/homepage-${{ github.REF_NAME }}-devcontainer
     
     permissions:
       id-token: write   # This is required for requesting the JWT
